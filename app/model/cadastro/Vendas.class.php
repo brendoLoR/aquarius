@@ -15,7 +15,7 @@ class Vendas extends TRecord
     const IDPOLICY =  'serial'; // {max, serial}
     private $vendendor;
     private $cliente;
-    
+    private $valor_total;
     /**
      * Constructor method
      */
@@ -29,7 +29,7 @@ class Vendas extends TRecord
         parent::addAttribute('id_vendedor');
         parent::addAttribute('fase_producao');
         parent::addAttribute('id_cliente');
-        parent::addAttribute('total');
+        //parent::addAttribute('total');
         parent::addAttribute('valor_pago');
 
     }
@@ -46,6 +46,15 @@ class Vendas extends TRecord
             $this->cliente = new Cliente($this->id_cliente);
         }
         return $this->cliente;
+    }
+    public function get_valor_total(){
+        if(empty($this->valor_total)){
+            $valor_item = VendaProduto::where('id_venda', '=', $this->id)->load();
+        }
+        foreach($valor_item as $valor){
+            $this->valor_total += $valor->total_item;
+        }
+        return $this->valor_total;
     }
 
 }

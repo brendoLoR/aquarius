@@ -78,7 +78,7 @@ class VendaList extends TStandardList
         $column_cliente = new TDataGridColumn('cliente->nome_cliente', 'Cliente', 'left');
         $column_DataPedido = new TDataGridColumn('data_venda', 'Data/hora da venda', 'left');
         $column_DataPrevEntrega = new TDataGridColumn('data_entrega_previsto', 'Data Previsão de entrega', 'left');
-        $column_total = new TDataGridColumn('total', 'Valor Total', 'left');
+        $column_total = new TDataGridColumn('valor_total', 'Valor Total', 'left');
         $column_valor_pago = new TDataGridColumn('valor_pago', 'Valor Pago', 'left');
         $column_valor_restante = new TDataGridColumn('={total} - {valor_pago}', 'Resta a pagar', 'left');
 

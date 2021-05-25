@@ -3,13 +3,13 @@
   <menuitem label="Vendas">
     <icon>fas:atlas fa-fw #00d3ff</icon>
     <menu>
-      <menuitem label="Nova Venda">
-        <action>NewVenda</action>
-        <icon>fas:archive fa-fw #6ba7a3</icon>
-      </menuitem>
       <menuitem label="Todas as Vendas">
         <action>VendaList</action>
         <icon>fas:align-left fa-fw #6ba7a3</icon>
+      </menuitem>
+      <menuitem label="Lista Venda Produtos">
+        <action>VendaProdutoList</action>
+        <icon>fas:angle-double-right fa-fw #6ba7a3</icon>
       </menuitem>
     </menu>
   </menuitem>
