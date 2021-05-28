@@ -1,5 +1,10 @@
 <?php
 
+use Adianti\Control\TAction;
+use Adianti\Database\TTransaction;
+use Adianti\Widget\Datagrid\TDataGridColumn;
+use Adianti\Widget\Dialog\TMessage;
+
 /**
  * VendaList
  *
@@ -75,7 +80,8 @@ class VendaList extends TStandardList
         $this->datagrid->setHeight(320);
 
         // creates the datagrid columns
-        $column_id = new TDataGridColumn('id', 'Id', 'center', 50);
+        $column_id = new TDataGridColumn('id', 'Id', 'center', 30);
+        $column_fase_producao = new TDataGridColumn('fase_producao', 'Produção', 'center', 50);
         $column_cliente = new TDataGridColumn('cliente->nome_cliente', 'Cliente', 'left');
         $column_DataPedido = new TDataGridColumn('data_venda', 'Data/hora da venda', 'left');
         $column_DataPrevEntrega = new TDataGridColumn('data_entrega_previsto', 'Data Previsão de entrega', 'left');
@@ -84,12 +90,12 @@ class VendaList extends TStandardList
         $column_valor_restante = new TDataGridColumn('={valor_total} - {valor_pago} + {frete_preco}', 'Resta a pagar', 'left');
         $column_valor_frete = new TDataGridColumn('frete_preco', 'Frete', 'left');
         $column_valor_final = new TDataGridColumn('={frete_preco}+{valor_total}', 'Valor Final', 'left');
-
         $column_DataPrevEntrega->setTransformer(array($this, 'formatDate'));
         $column_DataPedido->setTransformer(array($this, 'formatDateTime'));
 
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_id);
+        $this->datagrid->addColumn($column_fase_producao);
         $this->datagrid->addColumn($column_cliente);
         $this->datagrid->addColumn($column_DataPedido);
         $this->datagrid->addColumn($column_DataPrevEntrega);
@@ -112,12 +118,25 @@ class VendaList extends TStandardList
             }
             return $value;
         };
+        $set_fase_producao = function ($value) {
+            if ($value == 1) {
+                return 'Arte';
+            }
+            if ($value == 2) {
+                return 'Costura';
+            }
+            if ($value == 3) {
+                return 'Pronto';
+            }
+        };
+
 
         $column_valor_item->setTransformer($format_value_real);
         $column_valor_pago->setTransformer($format_value_real);
         $column_valor_restante->setTransformer($format_value_real);
         $column_valor_final->setTransformer($format_value_real);
         $column_valor_frete->setTransformer($format_value_real);
+        $column_fase_producao->setTransformer($set_fase_producao);
 
         // creates the datagrid column actions
         $order_id = new TAction(array($this, 'onReload'));
@@ -154,13 +173,20 @@ class VendaList extends TStandardList
         $action_edit->setImage('far:edit blue');
         $action_edit->setField('id');
         $this->datagrid->addAction($action_edit);
-
+        
         $action_relatorio = new TDataGridAction(array('PDFCreate', 'onEdit'));
         $action_relatorio->setButtonClass('btn btn-default');
         $action_relatorio->setLabel('Emitir Relatorio');
         $action_relatorio->setImage('fas:print green');
         $action_relatorio->setField('id');
         $this->datagrid->addAction($action_relatorio);
+
+        $action_edit = new TDataGridAction(array($this, 'onProducao'));
+        $action_edit->setButtonClass('btn btn-default');
+        $action_edit->setLabel('Enviar para costura');
+        $action_edit->setImage('fas:tshirt blue');
+        $action_edit->setField('id');
+        $this->datagrid->addAction($action_edit);
 
         // create DELETE action
         $action_del = new TDataGridAction(array($this, 'onDelete'));
@@ -201,5 +227,19 @@ class VendaList extends TStandardList
     {
         $dt = new DateTime($date);
         return $dt->format('d/m/Y - H:i');
+    }
+    public function onProducao($param)
+    {
+        try{
+            TTransaction::open('database');
+            $venda = new Vendas($param['id']);
+            $venda->fase_producao = 2;
+            $venda->store();
+            TTransaction::close();
+            $posAction = new TAction([$this, 'onReload']);
+            new TMessage('info', 'Venda Nº '.$param['id'].' na fase de costura', $posAction);
+        }catch(Exception $e){
+            new TMessage('error', $e->getMessage());
+        }
     }
 }
