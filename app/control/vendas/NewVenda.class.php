@@ -557,7 +557,7 @@ class NewVenda extends TWindow
             }
 
             $date_now = new DateTime();
-            $venda->data_venda = $date_now->format('d-m-Y H:i:s');
+            $venda->data_venda = $date_now->format('Y-m-d H:i:s');
             $venda->id_cliente = $data->id_cliente;
             $venda->data_entrega_previsto = $data->data_venda;
             $venda->observacao = $data->observacao;
@@ -639,7 +639,7 @@ class NewVenda extends TWindow
 
             $source_file = $dados_file->fileName;
             $target_file = strpos($dados_file->fileName, $target_path) === FALSE ? $target_path . '/' . $dados_file->fileName : $dados_file->fileName;
-            $target_file = str_replace('tmp/', '', $target_file);
+            $target_file = str_replace('./tmp/', '', $target_file);
 
             $class = get_class($object);
             $obj_store = new $class($object->$pk);
