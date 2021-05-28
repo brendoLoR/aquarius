@@ -141,13 +141,7 @@ class VendaList extends TStandardList
         $column_valor_item->setAction($order_total);
 
         // create EDIT action
-        $action_quitar = new TDataGridAction(array('NewVenda', 'onQuitar'));
-        $action_quitar->setButtonClass('btn btn-default');
-        $action_quitar->setLabel('quitar');
-        $action_quitar->setImage('fas:money-check green');
-        $action_quitar->setField('id');
-        $this->datagrid->addAction($action_quitar);
-
+        
         $action_edit = new TDataGridAction(array('NewVenda', 'onEdit'));
         $action_edit->setButtonClass('btn btn-default');
         $action_edit->setLabel(_t('Edit'));
@@ -161,7 +155,14 @@ class VendaList extends TStandardList
         $action_relatorio->setImage('fas:print green');
         $action_relatorio->setField('id');
         $this->datagrid->addAction($action_relatorio);
-
+        
+        $action_quitar = new TDataGridAction(array('NewVenda', 'onQuitar'));
+        $action_quitar->setButtonClass('btn btn-default');
+        $action_quitar->setLabel('quitar');
+        $action_quitar->setImage('fas:money-check green');
+        $action_quitar->setField('id');
+        $this->datagrid->addAction($action_quitar);
+       
         // create DELETE action
         $action_del = new TDataGridAction(array($this, 'onDelete'));
         $action_del->setButtonClass('btn btn-default');
@@ -169,7 +170,7 @@ class VendaList extends TStandardList
         $action_del->setImage('far:trash-alt red');
         $action_del->setField('id');
         $this->datagrid->addAction($action_del);
-
+        
         // create the datagrid model
         $this->datagrid->createModel();
 
