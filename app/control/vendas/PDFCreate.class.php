@@ -132,7 +132,8 @@ class PDFCreate extends TPage
             // $panel->addHeaderActionLink('Export', new TAction([$this, 'onExportPDF'], ['static' => '1']), 'fa:save');
             $panel->addHeaderActionLink('Export', new TAction([$this, 'onExportPDF'], [
                 'static' => '1',
-                'id' => $venda_id
+                'id' => $venda_id,
+                'date' => $invoice->order_date
             ]), 'fa:save');
             $panel->add($this->html);
 
@@ -163,10 +164,11 @@ class PDFCreate extends TPage
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
 
-            $file = 'app/output/invoice.pdf';
-
+            $file = 'app/output/aquarius-'.date_format(new DateTime($param['date']),'Ym').$param['id'].'.pdf';
+            
             // write and open file
             file_put_contents($file, $dompdf->output($options = ['compress' => 0]));
+            parent::openFile($file);
 
             $window = TWindow::create('invoice', 0.8, 0.8);
             $object = new TElement('object');
