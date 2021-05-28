@@ -158,7 +158,7 @@ class VendaList extends TStandardList
         $action_relatorio = new TDataGridAction(array('PDFCreate', 'onEdit'));
         $action_relatorio->setButtonClass('btn btn-default');
         $action_relatorio->setLabel('Emitir Relatorio');
-        $action_relatorio->setImage('far:edit green');
+        $action_relatorio->setImage('fas:print green');
         $action_relatorio->setField('id');
         $this->datagrid->addAction($action_relatorio);
 
