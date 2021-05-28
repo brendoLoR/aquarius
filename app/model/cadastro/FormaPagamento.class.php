@@ -1,6 +1,6 @@
 <?php
 /**
- * Cliente
+ * FormaPagamento
  *
  * @version    1.0
  * @package    model
@@ -8,9 +8,9 @@
  * @author     Brendo Jackson Leite da Silva
  * @copyright  Copyright (c) 2006 Brendo
  */
-class Cliente extends TRecord
+class FormaPagamento extends TRecord
 {
-    const TABLENAME = 'clientes';
+    const TABLENAME = 'metodos_pagamento';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'serial'; // {max, serial}
     
@@ -21,11 +21,6 @@ class Cliente extends TRecord
     public function __construct($id = NULL)
     {
         parent::__construct($id);
-        parent::addAttribute('nome_cliente');
-        parent::addAttribute('telefone');
-        parent::addAttribute('endereco');
-        parent::addAttribute('email');
-        parent::addAttribute('cpf_cnpj');
-        
+        parent::addAttribute('metodo');
     }
 }
