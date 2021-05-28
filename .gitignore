@@ -1,2 +1,13 @@
 /lib
 /vendor
+app/config/aquarius.ini
+app/config/aquarius.php
+app/config/communication.ini
+app/config/database.ini
+app/config/ldap.ini
+app/config/log.ini
+app/config/permission.ini
+app/config/sample.php
+app/config/unit_a.ini
+app/config/unit_b.ini
+files/images
