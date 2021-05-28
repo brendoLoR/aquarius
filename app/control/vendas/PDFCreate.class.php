@@ -65,16 +65,20 @@ class PDFCreate extends TPage
 
             $customer = new stdClass;
             $customer->name       = $cliente->nome_cliente;
-            $customer->address    = $cliente->endereco;
+            if (isset($cliente->endereco)) {
+                $customer->address = $cliente->endereco;
+            } else {
+                $customer->address = 'Retirada no local';
+            }
+
             $customer->telefone   = $cliente->telefone;
-            $customer->email       = $cliente->email;
+            $customer->email = $cliente->email;
             if (isset($cliente->cpf_cnpj)) {
                 $customer->cpf_cnpj = $cliente->cpf_cnpj;
             } else if (isset($cliente->cnpj)) {
                 $customer->cpf_cnpj = $cliente->cpj_cnpj;
-            }else{
+            } else {
                 $customer->cpf_cnpj = '999.999.999-99';
-
             }
             $customer->email       = $cliente->email;
 
