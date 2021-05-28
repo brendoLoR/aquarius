@@ -39,8 +39,14 @@ class PDFCreate extends TPage
 
             // define replacements for the main section
             $invoice = new stdClass;
-            $invoice->id   = $venda->id;
+            $customer = new stdClass;
+            $shipping = new stdClass;
+            $vendedor = new stdClass;
+
             $date = new DateTime();
+
+            $invoice->id   = $venda->id;
+            
             $invoice->date =  $date->format('d/m/Y');
             $invoice->order_date = $venda->data_venda;
             $invoice->entrega_date = $venda->data_entrega_previsto;
@@ -50,29 +56,35 @@ class PDFCreate extends TPage
             $invoice->valor_pago = $venda->valor_pago;
             $invoice->valor_pedido = $venda->get_valor_total();
             $invoice->valor_total = floatval($invoice->valor_pedido) + floatval($venda->frete_preco);
+
             if ($venda->valor_pago - $invoice->valor_total + $venda->frete_preco < 0) {
                 $invoice->troco_sinal = "-";
             } else {
                 $invoice->troco_sinal = " ";
             }
+
             $troco = floatval($venda->valor_pago) - floatval($invoice->valor_total);
             $invoice->troco = abs($troco);
+
             if (isset($venda->observacao)) {
                 $invoice->observacao = $venda->observacao;
             } else {
                 $invoice->observacao = "";
             }
 
-            $customer = new stdClass;
             $customer->name       = $cliente->nome_cliente;
+
             if (isset($cliente->endereco)) {
                 $customer->address = $cliente->endereco;
+                $shipping->address = $cliente->endereco;
             } else {
                 $customer->address = 'Retirada no local';
+                $shipping->address = 'Retirada no local';
             }
 
             $customer->telefone   = $cliente->telefone;
             $customer->email = $cliente->email;
+
             if (isset($cliente->cpf_cnpj)) {
                 $customer->cpf_cnpj = $cliente->cpf_cnpj;
             } else if (isset($cliente->cnpj)) {
@@ -80,13 +92,11 @@ class PDFCreate extends TPage
             } else {
                 $customer->cpf_cnpj = '999.999.999-99';
             }
+
             $customer->email       = $cliente->email;
-
-            $shipping = new stdClass;
+            
             $shipping->name       = $cliente->nome_cliente;
-            $shipping->address    = $cliente->endereco;
-
-            $vendedor = new stdClass;
+           
             $vendedor->name = $vendedor_inf->name;
             $vendedor->email = $vendedor_inf->email;
 
