@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menu>
+  <menuitem label="Nova venda">
+    <action>NewVenda</action>
+    <icon>fas:briefcase fa-fw #2f823b</icon>
+  </menuitem>
   <menuitem label="Vendas">
     <icon>fas:atlas fa-fw #00d3ff</icon>
     <menu>
       <menuitem label="Todas as Vendas">
         <action>VendaList</action>
         <icon>fas:align-left fa-fw #6ba7a3</icon>
-      </menuitem>
-      <menuitem label="Lista Venda Produtos">
-        <action>VendaProdutoList</action>
-        <icon>fas:angle-double-right fa-fw #6ba7a3</icon>
       </menuitem>
     </menu>
   </menuitem>
