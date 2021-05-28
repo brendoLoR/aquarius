@@ -6,6 +6,9 @@ use Adianti\Base\AdiantiFileSaveTrait;
 use Adianti\Control\TWindow;
 use Adianti\Control\TPage;
 use Adianti\Database\TTransaction;
+use Adianti\Widget\Dialog\TMessage;
+use Adianti\Widget\Form\TNumeric;
+use Adianti\Widget\Wrapper\TDBCombo;
 
 /**
  * NewVenda
@@ -39,13 +42,20 @@ class NewVenda extends TWindow
         $this->form->setFormTitle('Venda');
         $this->form->setProperty('style', 'margin:0;border:0');
         $this->form->setClientValidation(true);
+        $this->form->generateAria();
 
         // master fields
         $id          = new TEntry('id');
         $date        = new TDate('data_venda');
         $cliente_id  = new TDBUniqueSearch('id_cliente', 'database', 'Cliente', 'id', 'nome_cliente');
-        $valor_pago  = new TEntry('valor_pago');
+        $valor_pago  = new TEntry('valor_pag');
         $obs         = new TText('observacao');
+        $frete_preco = new TEntry('frete_preco');
+        $forma_pagamento  = new TDBCombo('id_pagamento', 'database', 'FormaPagamento', 'id', 'metodo');
+        $tipo_entrega    = new TRadioGroup('id_tipo_entrega');
+        $tipo_entrega  = new TDBCombo('id_tipo_entrega', 'database', 'TipoEntrega', 'id', 'tipo_entrega');
+
+
 
         $button = new TActionLink('', new TAction(['ClienteList', 'onEdit']), 'green', null, null, 'fa:plus-circle');
         $button->class = 'btn btn-default inline-button';
@@ -53,7 +63,7 @@ class NewVenda extends TWindow
         $cliente_id->after($button);
 
         // detalhe fields
-        $produto_detalhe_unqid      = new TEntry('produto_detalhe_uniqid');
+        $produto_detalhe_unqid      = new THidden('produto_detalhe_uniqid');
         $produto_detalhe_id         = new TEntry('produto_detalhe_id');
         $produto_detalhe_name       = new THidden('produto_detalhe_name');
         $produto_detalhe_produto_id = new TDBUniqueSearch('produto_detalhe_produto_id', 'database', 'Produto', 'id', 'nome_produto');
@@ -77,6 +87,7 @@ class NewVenda extends TWindow
         $produto_detalhe_preco->setEditable(false);
         $produto_detalhe_quantidade->setNumericMask(0, ',', '');
         $valor_pago->setNumericMask(2, ',', '.');
+        $frete_preco->setNumericMask(2, ',', '.');
 
         $id->setEditable(false);
         $produto_detalhe_id->setEditable(false);
@@ -94,7 +105,10 @@ class NewVenda extends TWindow
         $produto_detalhe_desconto->setSize('20%');
         $observacao_produto->setSize('100%');
         $tamanho_produto_detalhe_id->setSize('30%');
-        $imagem_path->setSize('50%');
+        $imagem_path->setSize('40%');
+        $produto_detalhe_id->setSize('20%');
+        $frete_preco->setSize('25%');
+        $tipo_entrega->setSize('25%');
 
         // add validations
         $date->addValidation('Date', new TRequiredValidator);
@@ -115,6 +129,16 @@ class NewVenda extends TWindow
             [$cliente_id],
             [new TLabel('Valor Pago')],
             [$valor_pago]
+        );
+        $this->form->addFields(
+            [new TLabel('Frete:')],
+            [$frete_preco],
+            [new TLabel('Foram de Pagamento:')],
+            [$forma_pagamento]
+        );
+        $this->form->addFields(
+            [new TLabel('Entrega:')],
+            [$tipo_entrega]
         );
         $this->form->addFields([new TLabel('Obs')], [$obs]);
 
@@ -189,10 +213,10 @@ class NewVenda extends TWindow
 
         $col_subt->enableTotal('sum', 'R$', 2, ',', '.');
 
-        //$col_id->setVisibility(true);
-        // $col_uniq->setVisibility(false);
-        // $col_obs->setVisibility(false);
-        // $col_img->setVisibility(false);
+        $col_id->setVisibility(false);
+        $col_uniq->setVisibility(false);
+        $col_obs->setVisibility(false);
+        $col_img->setVisibility(false);
 
         // creates two datagrid actions
         $action1 = new TDataGridAction(
@@ -390,7 +414,6 @@ class NewVenda extends TWindow
             $posAction->setParameters($param);
             TTransaction::close(); // close the transaction
             new TMessage('info', TAdiantiCoreTranslator::translate('Record saved'), $posAction);
-
         }
         // clear produto form fields after add
         $data->produto_detalhe_uniqid     = '';
@@ -502,7 +525,7 @@ class NewVenda extends TWindow
                         'observacao_item' => $item->observacao_produto,
                         'imagem_path' => $item->imagem_path
                     ];
-                    
+
                     $row = $this->produto_list->addItem((object) $grid_data);
                     $row->id = $item->uniqid;
                 }
@@ -540,8 +563,10 @@ class NewVenda extends TWindow
             $venda->observacao = $data->observacao;
             $venda->id_vendedor = TSession::getValue('userid');
             $venda->fase_producao = "1";
-            $venda->valor_pago = floatval(str_replace(',', '.', str_replace('.', '', $data->valor_pago)));
-
+            $venda->id_pagamento = $data->id_pagamento;
+            $venda->id_tipo_entrega = $data->id_tipo_entrega;
+            $venda->valor_pago = floatval(str_replace(',', '.', str_replace('.', '', $data->valor_pag)));
+            $venda->frete_preco = floatval(str_replace(',', '.', str_replace('.', '', $data->frete_preco)));
             $venda->store();
 
 
@@ -551,12 +576,12 @@ class NewVenda extends TWindow
             $total = 0.0;
             if (!empty($param['produtos_list_produto_id'])) {
                 foreach ($param['produtos_list_produto_id'] as $key => $item_id) {
-                    if(!isset($param['produtos_list_id'])){
+                    if (!isset($param['produtos_list_id'])) {
                         $item = new VendaProduto;
-                    }else{
+                    } else {
                         $item = new VendaProduto((int) $param['produtos_list_id'][$key]);
                     }
-                    
+
                     //$this->saveFiles($item, $data, 'imagem_path', 'files/images', 'ProdutoImagem', 'imagem_path', 'id_imagem_path');
                     $item->id_produto  = $item_id;
                     $item->quantidade  = (int) $param['produtos_list_quantidade'][$key];
@@ -571,7 +596,7 @@ class NewVenda extends TWindow
                     $total += $item->total_item;
                 }
             }
-           // $venda->total = $total;
+            // $venda->total = $total;
             $venda->store(); // stores the object
 
             TForm::sendData('form_venda', (object) ['id' => $venda->id]);
@@ -667,6 +692,21 @@ class NewVenda extends TWindow
             }
 
             return $obj_store;
+        }
+    }
+    public function onQuitar($param)
+    {
+        try {
+            TTransaction::open('database');
+            $venda = new Vendas($param['id']);
+            $venda->valor_pago = floatval($venda->get_valor_total()) + floatval($venda->frete_preco);
+            $venda->store();
+            TTransaction::close();
+            $posAction = new TAction(array($this, 'onEdit'));
+            $posAction->setParameters($param);
+            new TMessage('info', 'Venda Quitada', $posAction);
+        } catch (Exception $e) {
+            new TMessage('error', $e->getMessage());
         }
     }
 }

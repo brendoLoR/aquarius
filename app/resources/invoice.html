@@ -1,0 +1,155 @@
+<!--[main]-->
+
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel-title col-mb-1 text-center">
+			<div class="text-center">
+				<h3>Aquarius Camisetas</h3>
+			</div>
+			
+		</div>
+		<div class="row">
+			<div class="col-sm-6 float-left">
+				<div class="img">
+					<img src="app/resources/images/logo.png" width="150" height="auto"><br>
+				</div>
+				
+				<strong>CNPJ: </strong>11.432.177/0001-83<br>
+				<strong>Email: </strong>aquariusg.rapida@gmail.com<br>
+				<strong>Telefone: </strong>84 98826-0399<br>
+			</div>	
+				
+					
+			<div class="col-sm-6 float-right">		
+				<div class="text-right">
+					<strong> Venda Nº #date_format({{invoice->order_date}},'Ym'){{invoice->id}}</strong><br>
+					<strong>Data:</strong> {{invoice->date}}
+				</div>
+			</div>	
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-sm-6">
+				<h5>Cliente:</h5>
+				<address>
+					{{customer->name}}<br>
+					{{customer->telefone}}<br>
+					{{customer->email}}<br>
+					<strong>Endereço:</strong><br>
+					{{shipping->address}}<br>
+				</address>
+			</div>
+			<div class="col-sm-6 float-right text-right">
+				<h5>Vendedor:</h5><br>
+				<address>
+					{{vendedor->name}}<br>
+					{{vendedor->email}}<br>
+				</address>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<h5>Forma de Pagamento:</h5>
+				<address>
+					{{invoice->pay_method}}<br>
+				</address>
+			</div>
+			<div class="col-sm-6 float-right text-right">
+				<h5>Data da Venda:</h5>
+				<address>
+					date_format({{invoice->order_date}},'d/m/Y')<br><br>
+				</address>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"><strong>PEDIDO</strong></h4>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-condensed" style="border-collapse:collapse">
+						<thead>
+							<tr>
+								<td><strong>Item</strong></td>
+								<td><strong>Descrição</strong></td>
+								<td class="text-center"><strong>preço</strong></td>
+								<td class="text-center"><strong>Quantitade</strong></td>
+								<td class="text-center"><strong>Desconto</strong></td>
+								<td class="text-right"><strong>Total</strong></td>
+							</tr>
+						</thead>
+						<tbody>
+							<!--[items]-->
+							<tr> 
+								<td>{{code}}</td>
+								<td>{{description}}</td>
+								<td class="text-center">R$ {{price}}</td>
+								<td class="text-center">{{quantity}}</td>
+								<td class="text-center">{{desconto}} %</td>
+								<td class="text-right">R$ number_format(evaluate( {{price}} * {{quantity}} * 1 - {{desconto}}/100), 2, ',', '.')</td>
+								
+							</tr>
+							<!--[/items]-->
+							<tr>
+								<td style="border-top:1px solid black" class="thick-line"></td>
+								<td style="border-top:1px solid black" class="thick-line"></td>
+								<td style="border-top:1px solid black" class="thick-line"></td>
+								<td style="border-top:1px solid black" class="thick-line"></td>
+								<td style="border-top:1px solid black" class="thick-line text-right">
+									<strong>Subtotal</strong></td>
+								<td style="border-top:1px solid black" class="thick-line text-right">R$	number_format({{invoice->valor_pedido}}, 2, ',', '.')</td>
+							</tr>
+							<tr>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line text-right"><strong>Frete</strong></td>
+								<td class="no-line text-right">R$ number_format({{invoice->shipping}}, 2, ',', '.')</td>
+							</tr>
+							<tr>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line text-right"><strong>Total</strong></td>
+								<td class="no-line text-right">R$ number_format(evaluate( {{invoice->valor_total}}), 2, ',', '.')</td>
+							</tr>
+							<tr>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line"></td>
+								<td class="no-line text-right"><strong>Valor Pago</strong></td>
+								<td class="no-line text-right">R$ number_format(evaluate( {{invoice->valor_pago}} ), 2, ',', '.')</td>
+							</tr>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title"><strong>OBSERVAÇÕES</strong></h5>
+			</div>
+			<div class="panel-body">
+				<p>{{invoice->observacao}}</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--[/main]-->
