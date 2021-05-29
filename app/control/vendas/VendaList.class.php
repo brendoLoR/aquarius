@@ -160,13 +160,7 @@ class VendaList extends TStandardList
         $column_valor_item->setAction($order_total);
 
         // create EDIT action
-        $action_quitar = new TDataGridAction(array('NewVenda', 'onQuitar'));
-        $action_quitar->setButtonClass('btn btn-default');
-        $action_quitar->setLabel('quitar');
-        $action_quitar->setImage('fas:money-check green');
-        $action_quitar->setField('id');
-        $this->datagrid->addAction($action_quitar);
-
+        
         $action_edit = new TDataGridAction(array('NewVenda', 'onEdit'));
         $action_edit->setButtonClass('btn btn-default');
         $action_edit->setLabel(_t('Edit'));
@@ -181,12 +175,19 @@ class VendaList extends TStandardList
         $action_relatorio->setField('id');
         $this->datagrid->addAction($action_relatorio);
 
-        $action_edit = new TDataGridAction(array($this, 'onProducao'));
-        $action_edit->setButtonClass('btn btn-default');
-        $action_edit->setLabel('Enviar para costura');
-        $action_edit->setImage('fas:tshirt blue');
-        $action_edit->setField('id');
-        $this->datagrid->addAction($action_edit);
+        $action_costura = new TDataGridAction(array($this, 'onProducao'));
+        $action_costura->setButtonClass('btn btn-default');
+        $action_costura->setLabel('Enviar para costura');
+        $action_costura->setImage('fas:tshirt blue');
+        $action_costura->setField('id');
+        $this->datagrid->addAction($action_costura);
+
+        $action_quitar = new TDataGridAction(array('NewVenda', 'onQuitar'));
+        $action_quitar->setButtonClass('btn btn-default');
+        $action_quitar->setLabel('quitar');
+        $action_quitar->setImage('fas:money-check green');
+        $action_quitar->setField('id');
+        $this->datagrid->addAction($action_quitar);
 
         // create DELETE action
         $action_del = new TDataGridAction(array($this, 'onDelete'));

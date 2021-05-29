@@ -164,7 +164,7 @@ class NewVenda extends TWindow
             [new TLabel('desconto (%)')],
             [$produto_detalhe_desconto]
         );
-        $this->form->addFields([new TLabel('(em desenvolvimento, n usar)Arte')], [$imagem_path]);
+        $this->form->addFields([new TLabel('Arte')], [$imagem_path]);
         $this->form->addFields([new TLabel('OBS')], [$observacao_produto]);
 
         $add_produto = TButton::create('add_produto', [$this, 'onProdutoAdd'], 'Register', 'fa:plus-circle green');
