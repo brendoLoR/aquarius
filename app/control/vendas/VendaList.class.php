@@ -196,7 +196,7 @@ class VendaList extends TStandardList
         $action_del->setImage('far:trash-alt red');
         $action_del->setField('id');
         $this->datagrid->addAction($action_del);
-
+        
         // create the datagrid model
         $this->datagrid->createModel();
 
