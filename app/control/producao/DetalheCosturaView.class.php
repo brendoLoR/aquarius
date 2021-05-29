@@ -47,16 +47,20 @@ class DetalheCosturaView extends TWindow
 
         // define the transformer method over image
         $column->setTransformer(function ($image) {
-            $image = new TImage($image);
-            $image->style = 'max-width: 400px';
-            return $image;
+            if (isset($image)) {
+                $image = new TImage($image);
+                $image->style = 'max-width: 400px';
+                return $image;
+            } else {
+                return '';
+            }
         });
-       
+
         $this->produto_list->createModel();
         $container = new TVBox;
         $container->style = 'width: 100%';
         $container->add($this->produto_list);
-        
+
         parent::add($container);
     }
     public function onView($param)
@@ -78,5 +82,4 @@ class DetalheCosturaView extends TWindow
             new TMessage('error', 'erro: ' . $e->getMessage() . 'contacte o Admin');
         }
     }
-
 }
