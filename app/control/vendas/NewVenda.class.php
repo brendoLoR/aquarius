@@ -529,16 +529,16 @@ class NewVenda extends TWindow
                     $row = $this->produto_list->addItem((object) $grid_data);
                     $row->id = $item->uniqid;
                 }
-      
-                $this->form->id = $object->id;
-                $this->form->data_venda = $object->data_entrega_previsto;
-                $this->form->id_cliente = $object->id_cliente;
-                $this->form->valor_pag = $object->get_valor_pag();
-                $this->form->observacao = $object->observacao;
-                $this->form->frete_preco = $object->frete_preco;
-                $this->form->id_pagamento = $object->id_pagamento;
-                $this->form->id_tipo_entrega = $object->id_tipo_entrega;
-                //$this->form->setData($object);
+                $dataForm = new stdClass;
+                $dataForm->id = $object->id;
+                $dataForm->data_venda = $object->data_entrega_previsto;
+                $dataForm->id_cliente = $object->id_cliente;
+                $dataForm->valor_pag = $object->get_valor_pag();
+                $dataForm->observacao = $object->observacao;
+                $dataForm->frete_preco = $object->frete_preco;
+                $dataForm->id_pagamento = $object->id_pagamento;
+                $dataForm->id_tipo_entrega = $object->id_tipo_entrega;
+                $this->form->setData($dataForm);
                 TTransaction::close();
             } else {
                 $this->form->clear();
