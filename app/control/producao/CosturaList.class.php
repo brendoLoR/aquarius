@@ -64,15 +64,27 @@ class CosturaList extends TStandardList
         } catch (Exception $e) {
             new TMessage('error', 'erro: ' . $e->getMessage() . 'contacte o Admin');
         }
-        $script = new TElement('script');
-        $script->type = 'text/javascript';
-        $script->add('
-            $(document).ready(function(){
-                   window.setTimeout(function(){ document.location.reload(true); }, 30000);
-            });
-        ');
+        // $script = new TElement('script');
+        // $script->type = 'text/javascript';
+        // $script->add("
+        //     $(document).ready(function(){
+        //             var query = location.search.slice(1);
+        //             var partes = query.split(' & ');
+        //             var data = {};
+        //             partes.forEach(function (parte) {
+        //             var chaveValor = parte.split(' = ');
+        //             var chave = chaveValor[0];
+        //             var valor = chaveValor[1];
+        //             data[chave] = valor;
+        //             });
+        //             console.log(data);
+        //             if data['class'] === 'CosturaList'{
+        //                 window.setTimeout(function(){ document.location.reload(true); }, 3000);
+        //             }
+        //     });
+        // ");
 
-        parent::add($script);
+        // parent::add($script);
     }
     // public function onReload($param)
     // {
