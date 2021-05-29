@@ -34,7 +34,7 @@ class DetalheCosturaView extends TWindow
         parent::__construct();
         parent::setSize(0.8, null);
         parent::removePadding();
-        // parent::removeTitleBar();
+
         $this->produto_list = new BootstrapDatagridWrapper(new TDataGrid);
         $this->form = new BootstrapFormBuilder('form_costura');
         $this->produto_list->width = '100%';
@@ -48,7 +48,7 @@ class DetalheCosturaView extends TWindow
         // define the transformer method over image
         $column->setTransformer(function ($image) {
             $image = new TImage($image);
-            $image->style = 'max-width: 240px';
+            $image->style = 'max-width: 400px';
             return $image;
         });
        
