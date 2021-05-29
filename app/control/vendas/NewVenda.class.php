@@ -406,14 +406,13 @@ class NewVenda extends TWindow
             $item->quantidade = $data->produto_detalhe_quantidade;
             $item->desconto = $data->produto_detalhe_desconto;
             $item->total_item = $total_item;
-            $item->imagem_path = $data->imagem_path;
-
+            
             $item->store();
+
+            $this->saveFile($item, $data->imagem_path, 'imagem_path', 'files/images');
+
             TTransaction::close();
-            $posAction = new TAction(array('VendaList', 'onReload'));
-            $posAction->setParameters($param);
-            TTransaction::close(); // close the transaction
-            new TMessage('info', TAdiantiCoreTranslator::translate('Record saved'), $posAction);
+            
         }
         // clear produto form fields after add
         $data->produto_detalhe_uniqid     = '';
@@ -429,6 +428,10 @@ class NewVenda extends TWindow
 
         // send data, do not fire change/exit events
         TForm::sendData('form_venda', $data, false, false);
+        $posAction = new TAction(array('VendaList', 'onReload'));
+        $posAction->setParameters($param);
+        TTransaction::close(); // close the transaction
+        new TMessage('info', TAdiantiCoreTranslator::translate('Record saved'), $posAction);
     }
 
     /**
