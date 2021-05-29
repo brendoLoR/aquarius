@@ -639,7 +639,7 @@ class NewVenda extends TWindow
 
             $source_file = $dados_file->fileName;
             $target_file = strpos($dados_file->fileName, $target_path) === FALSE ? $target_path . '/' . $dados_file->fileName : $dados_file->fileName;
-            $target_file = str_replace('./tmp/', '', $target_file);
+            $target_file = str_replace('tmp/', '', $target_file);
 
             $class = get_class($object);
             $obj_store = new $class($object->$pk);
