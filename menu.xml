@@ -2,10 +2,10 @@
 <menu>
   <menuitem label="Nova venda">
     <action>NewVenda</action>
-    <icon>fas:briefcase fa-fw #2f823b</icon>
+    <icon>fas:cart-arrow-down fa-fw #2f823b</icon>
   </menuitem>
   <menuitem label="Vendas">
-    <icon>fas:atlas fa-fw #00d3ff</icon>
+    <icon>fas:atlas fa-fw #01405d</icon>
     <menu>
       <menuitem label="Todas as Vendas">
         <action>VendaList</action>
@@ -14,7 +14,7 @@
     </menu>
   </menuitem>
   <menuitem label="Cadastros">
-    <icon>fas:archive fa-fw #00d3ff</icon>
+    <icon>fas:archive fa-fw #01405d</icon>
     <menu>
       <menuitem label="Tamanhos">
         <action>TamanhoList</action>
@@ -27,6 +27,15 @@
       <menuitem label="Clientes">
         <action>ClienteList</action>
         <icon>fas:address-card fa-fw #6ba7a3</icon>
+      </menuitem>
+    </menu>
+  </menuitem>
+  <menuitem label="Produção">
+    <icon>fas:compress-arrows-alt fa-fw #01405d</icon>
+    <menu>
+      <menuitem label="Costura">
+        <action>CosturaList</action>
+        <icon>fas:tshirt fa-fw #6ba7a3</icon>
       </menuitem>
     </menu>
   </menuitem>
