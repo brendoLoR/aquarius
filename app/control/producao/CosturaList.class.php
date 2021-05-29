@@ -74,8 +74,8 @@ class CosturaList extends TPage
     {
         $date1 = new DateTime($date);
         $date2 = new DateTime();
-        $interval = (int) date_diff($date1, $date2, false)->format("%r%a");
-
+        $interval = (int) date_diff($date2, $date1, false)->format("%r%a");
+        echo $interval;
         if ($interval > 5) {
             return '#33e662';
         } elseif ($interval < 5 and $interval > 2) {
