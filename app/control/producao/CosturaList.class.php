@@ -18,6 +18,7 @@ class CosturaList extends TPage
     public function __construct()
     {
         parent::__construct();
+        
         try {
             TTransaction::open('database');
             $vendas = new TCardView;
@@ -61,6 +62,15 @@ class CosturaList extends TPage
         } catch (Exception $e) {
             new TMessage('error', 'erro: ' . $e->getMessage() . 'contacte o Admin');
         }
+        $script = new TElement('script'); 
+        $script->type = 'text/javascript'; 
+        $script->add('
+            $(document).ready(function(){
+                   window.setTimeout(function(){ document.location.reload(true); }, 30000);
+            });
+        ');
+
+        parent::add($script);
     }
 
     /**
