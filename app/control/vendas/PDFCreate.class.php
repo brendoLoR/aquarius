@@ -58,13 +58,13 @@ class PDFCreate extends TPage
             $invoice->valor_total = floatval($invoice->valor_pedido) + floatval($venda->frete_preco);
 
             if ($venda->valor_pago - $invoice->valor_total + $venda->frete_preco < 0) {
-                $invoice->troco_sinal = "-";
+                $invoice->resta_sinal = "-";
             } else {
-                $invoice->troco_sinal = " ";
+                $invoice->resta_sinal = " ";
             }
 
-            $troco = floatval($venda->valor_pago) - floatval($invoice->valor_total);
-            $invoice->troco = abs($troco);
+            $resta = floatval($venda->valor_pago) - floatval($invoice->valor_total);
+            $invoice->resta = abs($resta);
 
             if (isset($venda->observacao)) {
                 $invoice->observacao = $venda->observacao;
