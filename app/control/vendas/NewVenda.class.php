@@ -190,19 +190,29 @@ class NewVenda extends TWindow
         $col_obs    = new TDataGridColumn('observacao_item', 'Subtotal', 'right', '20%');
         $col_img    = new TDataGridColumn('imagem_path', 'Imagem', 'right', '20%');
 
-        $this->produto_list->enablePopover('OBS', "{observacao_item}<p><img style='max-height: 300px' src='download.php?file={imagem_path}'></p>");
+        // $this->produto_list->enablePopover('OBS', "{observacao_item}<p><img style='max-height: 300px' src='download.php?file={imagem_path}'></p>");
+        $col_img->setTransformer(function ($image) {
+            if (isset($image)) {
+                $image = new TImage($image);
+                $image->style = 'max-width: 150px';
+                return $image;
+            } else {
+                return '';
+            }
+        });
 
         $this->produto_list->addColumn($col_uniq);
         $this->produto_list->addColumn($col_id);
         $this->produto_list->addColumn($col_pid);
         $this->produto_list->addColumn($col_descr);
         $this->produto_list->addColumn($col_tamanho);
+        $this->produto_list->addColumn($col_img);
         $this->produto_list->addColumn($col_quantidade);
         $this->produto_list->addColumn($col_preco);
         $this->produto_list->addColumn($col_disc);
         $this->produto_list->addColumn($col_subt);
         $this->produto_list->addColumn($col_obs);
-        $this->produto_list->addColumn($col_img);
+
 
         $col_descr->setTransformer(function ($value) {
             return Produto::findInTransaction('database', $value)->nome_produto;
@@ -216,7 +226,7 @@ class NewVenda extends TWindow
         $col_id->setVisibility(false);
         $col_uniq->setVisibility(false);
         $col_obs->setVisibility(false);
-        $col_img->setVisibility(false);
+        //$col_img->setVisibility(false);
 
         // creates two datagrid actions
         $action1 = new TDataGridAction(
@@ -406,13 +416,16 @@ class NewVenda extends TWindow
             $item->quantidade = $data->produto_detalhe_quantidade;
             $item->desconto = $data->produto_detalhe_desconto;
             $item->total_item = $total_item;
-            
+
             $item->store();
 
             $this->saveFile($item, $data->imagem_path, 'imagem_path', 'files/images');
 
             TTransaction::close();
-            
+            $posAction = new TAction(array('VendaList', 'onReload'));
+            $posAction->setParameters($param);
+            TTransaction::close(); // close the transaction
+            new TMessage('info', TAdiantiCoreTranslator::translate('Record saved'), $posAction);
         }
         // clear produto form fields after add
         $data->produto_detalhe_uniqid     = '';
@@ -428,10 +441,6 @@ class NewVenda extends TWindow
 
         // send data, do not fire change/exit events
         TForm::sendData('form_venda', $data, false, false);
-        $posAction = new TAction(array('VendaList', 'onReload'));
-        $posAction->setParameters($param);
-        TTransaction::close(); // close the transaction
-        new TMessage('info', TAdiantiCoreTranslator::translate('Record saved'), $posAction);
     }
 
     /**
@@ -580,7 +589,7 @@ class NewVenda extends TWindow
             $venda->valor_pago = floatval(str_replace(',', '.', str_replace('.', '', $data->valor_pag)));
             $venda->frete_preco = floatval(str_replace(',', '.', str_replace('.', '', $data->frete_preco)));
             $venda->store();
-            $venda->n_venda = $date_now->format('Ym').$venda->id;
+            $venda->n_venda = $date_now->format('Ym') . $venda->id;
 
 
 
