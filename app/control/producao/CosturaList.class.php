@@ -1,5 +1,7 @@
 <?php
 
+use Adianti\Base\TStandardList;
+use Adianti\Control\TAction;
 use Adianti\Database\TTransaction;
 use Adianti\Widget\Dialog\TMessage;
 
@@ -13,11 +15,12 @@ use Adianti\Widget\Dialog\TMessage;
  * @copyright  Copyright (c) 2021 e-code
  * @license    http://www.adianti.com.br/framework-license
  */
-class CosturaList extends TPage
+class CosturaList extends TStandardList
 {
     public function __construct()
     {
         parent::__construct();
+
         try {
             TTransaction::open('database');
             $vendas = new TCardView;
@@ -61,21 +64,44 @@ class CosturaList extends TPage
         } catch (Exception $e) {
             new TMessage('error', 'erro: ' . $e->getMessage() . 'contacte o Admin');
         }
+        $script = new TElement('script');
+        $script->type = 'text/javascript';
+        $script->add('
+            $(document).ready(function(){
+                   window.setTimeout(function(){ document.location.reload(true); }, 30000);
+            });
+        ');
+
+        parent::add($script);
     }
+    // public function onReload($param)
+    // {
+    //     TApplication::loadPage(__CLASS__,'onReload');
+    //     $this->loaded = TRUE;
+    // }
 
     /**
      * Item delete action
      */
-    public static function onItemPronto($param = NULL)
+    public function onItemPronto($param)
     {
-        new TMessage('info', '<b>onItemPronto</b><br>' . str_replace(',', '<br>', json_encode($param)));
+        try {
+            TTransaction::open('database');
+            $venda = new Vendas($param['id']);
+            $venda->fase_producao = 3;
+            $venda->store();
+            TTransaction::close();
+        } catch (Exception $e) {
+            new TMessage('error', 'ocorreu uma falha, ' . $e->getMessage() . ' contacte o Admin');
+        }
+        $posAction = new TAction([$this, 'onReload'], $param);
+        new TMessage('info', 'Pedido Nº ' . $venda->n_venda . ' Concluido!', $posAction);
     }
     public function get_color($date)
     {
         $date1 = new DateTime($date);
         $date2 = new DateTime();
-        $interval = (int) date_diff($date1, $date2, false)->format("%r%a");
-
+        $interval = (int) date_diff($date2, $date1, false)->format("%r%a");
         if ($interval > 5) {
             return '#33e662';
         } elseif ($interval < 5 and $interval > 2) {

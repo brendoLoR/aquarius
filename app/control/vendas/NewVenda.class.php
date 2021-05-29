@@ -577,6 +577,7 @@ class NewVenda extends TWindow
             $venda->valor_pago = floatval(str_replace(',', '.', str_replace('.', '', $data->valor_pag)));
             $venda->frete_preco = floatval(str_replace(',', '.', str_replace('.', '', $data->frete_preco)));
             $venda->store();
+            $venda->n_venda = $date_now->format('Ym').$venda->id;
 
 
 

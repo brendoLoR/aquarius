@@ -37,6 +37,7 @@ class Vendas extends TRecord
         parent::addAttribute('id_pagamento');
         parent::addAttribute('valor_pago');
         parent::addAttribute('id_tipo_entrega');
+        parent::addAttribute('n_venda');
     }
 
     public function get_vendedor()
