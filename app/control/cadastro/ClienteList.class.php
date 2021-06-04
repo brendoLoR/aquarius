@@ -71,7 +71,7 @@
 
             $cliente->addValidation('nome_cliente', new TRequiredValidator);
             $telefone->addValidation('telefone', new TRequiredValidator);
-            $email->addValidation('email', new TEmailValidator);
+            // $email->addValidation('email', new TEmailValidator);
 
 
 
