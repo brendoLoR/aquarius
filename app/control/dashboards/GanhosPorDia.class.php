@@ -117,6 +117,7 @@ class GanhosPorDia extends TPage
         $table->addRowSet($this->form);
         $table->addRowSet($this->html);
         $panel->add($table);
+        $panel->getBody()->style = "overflow-x:auto;";
 
         $container = new TVBox;
         $container->style = 'width: 100%';
