@@ -101,7 +101,7 @@ class GanhosPorDia extends TPage
         $this->html->enableSection('main', array(
             // aqui eu tenho que passsar os elementos do meu array
             'data' => json_encode($data),
-            'width' => '100%',
+            'width' => '1100px',
             'height' => '400px',
             'title' => 'Ganhos por dia - '._t($mes),
             'ytitle' => 'R$',
@@ -118,7 +118,6 @@ class GanhosPorDia extends TPage
         $table->addRowSet($this->html);
         $panel->add($table);
 
-        $panel->addFooter('Panel group footer');
         $container = new TVBox;
         $container->style = 'width: 100%';
         if ($show_breadcrumb) {
@@ -135,7 +134,7 @@ class GanhosPorDia extends TPage
         $this->html->enableSection('main', array(
             // aqui eu tenho que passsar os elementos do meu array
             'data' => json_encode($data),
-            'width' => '100%',
+            'width' => '1100px',
             'height' => '400px',
             'title' => 'Ganhos por dia',
             'ytitle' => 'R$',
