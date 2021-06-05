@@ -39,6 +39,10 @@
       </menuitem>
     </menu>
   </menuitem>
+  <menuitem label="Relatorios">
+    <action>GanhosPorDia</action>
+    <icon>fas:chart-bar fa-fw #01405d</icon>
+  </menuitem>
   <menuitem label="_t{Administration}">
     <icon>fas:home fa-fw</icon>
     <menu>
