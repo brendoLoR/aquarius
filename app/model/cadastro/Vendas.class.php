@@ -1,5 +1,7 @@
 <?php
 
+use Adianti\Widget\Dialog\TMessage;
+
 /**
  * Vendas
  *
@@ -20,6 +22,7 @@ class Vendas extends TRecord
     private $valor_pag;
     private $pagamento;
     private $tipo_entrega;
+    private $caixa;
     /**
      * Constructor method
      */
@@ -38,8 +41,16 @@ class Vendas extends TRecord
         parent::addAttribute('valor_pago');
         parent::addAttribute('id_tipo_entrega');
         parent::addAttribute('n_venda');
+        parent::addAttribute('caixa_id');
     }
 
+    public function get_caixa()
+    {
+        if (empty($this->caixa)) {
+            $this->caixa = new FluxoCaixa($this->caixa_id);
+        }
+        return $this->caixa;
+    }
     public function get_vendedor()
     {
         if (empty($this->vendedor)) {
@@ -84,5 +95,28 @@ class Vendas extends TRecord
             $this->valor_total += $valor->total_item;
         }
         return $this->valor_total;
+    }
+    public function onBeforeStore($object)
+    {
+        try {
+            TTransition::open('database');
+            $today = new Date();
+            if (!isset($object->id)) {
+                if (!$caixa = FluxoCaixa::where($today, '=', 'dia_ref')->load()) {
+                    $caixa = new FluxoCaixa();
+                    $caixa->save();
+                    $saldo_anterior = new FluxoCaixa($caixa->id - 1);
+                    $caixa->saldo = floatval($saldo_anterior->saldo) + floatval($object->get_valor_pag());
+                    $caixa->save();
+                }else{
+                    $caixa->saldo = floatval($caixa->saldo) + floatval($object->get_valor_pag());
+                }
+            }else{
+                
+            }
+            $this->caixa_id = $caixa->id;
+        } catch (Exepetion $e) {
+            new TMessage('error', 'Ocorreu um erro: ' . $e->getMessage() . ' caontacte o administrador');
+        }
     }
 }

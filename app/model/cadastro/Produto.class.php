@@ -23,5 +23,6 @@ class Produto extends TRecord
         parent::__construct($id);
         parent::addAttribute('nome_produto');
         parent::addAttribute('preco');
+        parent::addAttribute('custo_producao');
     }
 }
