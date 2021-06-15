@@ -159,7 +159,7 @@ class PDFCreate extends TPage
             ]), 'fa:save');
             $panel->add($this->html);
 
-            $vbox->add($panel);
+            $vbox->add($panel);         
             parent::add($vbox);
             TTransaction::close();
         } catch (Exception $e) {
