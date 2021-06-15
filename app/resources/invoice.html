@@ -39,6 +39,10 @@
 					<strong>Endereço:</strong><br>
 					{{shipping->address}}<br>
 				</address>
+				<address>
+					<strong>ENTREGA:</strong>
+					{{invoice->tipo_entrega}}<br>
+				</address>
 			</div>
 			<div class="col-sm-6 float-right text-right">
 				<h5>Vendedor:</h5><br>
@@ -46,6 +50,7 @@
 					{{vendedor->name}}<br>
 					{{vendedor->email}}<br>
 				</address>
+				
 			</div>
 		</div>
 		<div class="row">
@@ -109,7 +114,7 @@
 								<td class="no-line"></td>
 								<td class="no-line"></td>
 								<td class="no-line"></td>
-								<td class="no-line"></td>
+								<td class="no-line text-right"></td>
 								<td class="no-line text-right"><strong>Frete</strong></td>
 								<td class="no-line text-right">R$ number_format({{invoice->shipping}}, 2, ',', '.')</td>
 							</tr>
