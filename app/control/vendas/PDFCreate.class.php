@@ -51,11 +51,29 @@ class PDFCreate extends TPage
             $invoice->order_date = $venda->data_venda;
             $invoice->entrega_date = $venda->data_entrega_previsto;
             $invoice->pay_method = $venda->get_pagamento()->metodo;
-            $invoice->shipping = $venda->frete_preco;
             $invoice->tipo_entrega = $venda->get_tipo_entrega()->tipo_entrega;
-            $invoice->valor_pago = $venda->valor_pago;
             $invoice->valor_pedido = $venda->get_valor_total();
-            $invoice->valor_total = floatval($invoice->valor_pedido) + floatval($venda->frete_preco);
+            
+            if($venda->valor_pago <= 0){
+                $invoice->valor_pago = 0.0001;
+            }else{
+                $invoice->valor_pago = $venda->valor_pago;
+            }
+            if($venda->frete_preco <= 0){
+                $invoice->shipping = 0.0001;
+            }else{
+                $invoice->shipping = $venda->frete_preco;
+            }
+            
+            $valor_total = floatval($invoice->valor_pedido) + floatval($venda->frete_preco);
+            
+            if($valor_total <= 0){
+                $invoice->valor_total = 0.0001;
+            }else{
+                $invoice->valor_total = $valor_total;
+            }
+
+
 
             if ($venda->valor_pago - $invoice->valor_total + $venda->frete_preco < 0) {
                 $invoice->resta_sinal = "-";
@@ -64,15 +82,19 @@ class PDFCreate extends TPage
             }
 
             $resta = floatval($venda->valor_pago) - floatval($invoice->valor_total);
-            $invoice->resta = abs($resta);
+            if($resta <= 0){
+                $invoice->resta = 0.0001;
+            }else{
+                $invoice->resta = abs($resta);
+            }
 
             if (isset($venda->observacao)) {
                 $invoice->observacao = $venda->observacao;
             } else {
-                $invoice->observacao = "";
+                $invoice->observacao = " ";
             }
 
-            $customer->name       = $cliente->nome_cliente;
+            $customer->name = $cliente->nome_cliente;
 
             if (isset($cliente->endereco)) {
                 $customer->address = $cliente->endereco;
@@ -101,10 +123,10 @@ class PDFCreate extends TPage
             $vendedor->email = $vendedor_inf->email;
 
             $replace = array();
-            $replace['invoice']       = $invoice;
-            $replace['customer']      = $customer;
-            $replace['shipping']      = $shipping;
-            $replace['vendedor']      = $vendedor;
+            $replace['invoice'] = $invoice;
+            $replace['customer'] = $customer;
+            $replace['shipping'] = $shipping;
+            $replace['vendedor'] = $vendedor;
             $replace['items'] = [];
             foreach ($produtos as $item) {
                 array_push(
