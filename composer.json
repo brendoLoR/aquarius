@@ -12,7 +12,8 @@
     "adianti/pdfdesigner": "dev-master",
     "pablodalloglio/ole": "dev-master",
     "pablodalloglio/spreadsheet_excel_writer": "dev-master",
-    "pablodalloglio/fpdf": "dev-master"
+    "pablodalloglio/fpdf": "dev-master",
+    "robmorgan/phinx": "^0.12.7"
   },
   "config": {
     "preferred-install": {
