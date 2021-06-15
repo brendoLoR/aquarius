@@ -39,6 +39,10 @@
 					<strong>Endereço:</strong><br>
 					{{shipping->address}}<br>
 				</address>
+				<address>
+					<strong>ENTREGA:</strong>
+					{{invoice->tipo_entrega}}<br>
+				</address>
 			</div>
 			<div class="col-sm-6 float-right text-right">
 				<h5>Vendedor:</h5><br>
@@ -46,6 +50,7 @@
 					{{vendedor->name}}<br>
 					{{vendedor->email}}<br>
 				</address>
+				
 			</div>
 		</div>
 		<div class="row">
@@ -109,7 +114,7 @@
 								<td class="no-line"></td>
 								<td class="no-line"></td>
 								<td class="no-line"></td>
-								<td class="no-line"></td>
+								<td class="no-line text-right"></td>
 								<td class="no-line text-right"><strong>Frete</strong></td>
 								<td class="no-line text-right">R$ number_format({{invoice->shipping}}, 2, ',', '.')</td>
 							</tr>
@@ -154,6 +159,15 @@
 			</div>
 			<div class="panel-body">
 				<p>{{invoice->observacao}}</p>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<p style="font-size: smaller; text-align: justify;">O prazo de confecção são 10 dias úteis, após o pedido fechado, mediante arte aprovada  pelo cliente e primeira parcela (50% do valor) pago.
+					Ao término da produção do material será enviado foto e vídeo do material.
+					Caso o pagamento restante for feito após as 10 horas, o material será postado no dia útil seguinte.
+					
+					O prazo de entrega dos correios varia de acordo com a modalidade de frete contratada. Não nos responsabilizamos por atraso gerado no serviço correios.</p>
 			</div>
 		</div>
 	</div>

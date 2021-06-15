@@ -22,7 +22,6 @@ class Vendas extends TRecord
     private $valor_pag;
     private $pagamento;
     private $tipo_entrega;
-    private $caixa;
     /**
      * Constructor method
      */
@@ -41,16 +40,8 @@ class Vendas extends TRecord
         parent::addAttribute('valor_pago');
         parent::addAttribute('id_tipo_entrega');
         parent::addAttribute('n_venda');
-        parent::addAttribute('caixa_id');
     }
 
-    public function get_caixa()
-    {
-        if (empty($this->caixa)) {
-            $this->caixa = new FluxoCaixa($this->caixa_id);
-        }
-        return $this->caixa;
-    }
     public function get_vendedor()
     {
         if (empty($this->vendedor)) {
@@ -96,6 +87,7 @@ class Vendas extends TRecord
         }
         return $this->valor_total;
     }
+<<<<<<< HEAD
     // public function onBeforeStore($object)
     // {
     //     try {
@@ -121,3 +113,6 @@ class Vendas extends TRecord
     //     }
     // }
 }
+=======
+}
+>>>>>>> 326a4995e6914b3b26e6c506f0df36db3555c13e
