@@ -1,5 +1,7 @@
 <?php
 
+use Adianti\Widget\Dialog\TMessage;
+
 /**
  * Vendas
  *
