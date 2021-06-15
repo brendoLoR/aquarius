@@ -12,3 +12,8 @@ vendor
 /app/config/unit_b.ini
 /files/images
 /index.html
+app/config/application.ini
+app/config/security.conf
+app/output/aquarius-202106109.pdf
+app/config/application.ini
+app/config/application.ini
