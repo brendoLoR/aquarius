@@ -87,32 +87,28 @@ class Vendas extends TRecord
         }
         return $this->valor_total;
     }
-<<<<<<< HEAD
-    // public function onBeforeStore($object)
-    // {
-    //     try {
-    //         TTransaction::open('database');
-    //         $today = new Date();
-    //         if (!isset($object->id)) {
-    //             if (!$caixa = FluxoCaixa::where($today, '=', 'dia_ref')->load()) {
-    //                 $caixa = new FluxoCaixa();
-    //                 $caixa->save();
-    //                 $saldo_anterior = new FluxoCaixa($caixa->id - 1);
-    //                 $caixa->saldo = floatval($saldo_anterior->saldo) + floatval($object->get_valor_pag());
-    //                 $caixa->save();
-    //             }else{
-    //                 $caixa->saldo = floatval($caixa->saldo) + floatval($object->get_valor_pag());
-    //             }
-    //         }else{
+    public function onBeforeStore($object)
+    {
+        try {
+            TTransaction::open('database');
+            $today = new Date();
+            if (!isset($object->id)) {
+                if (!$caixa = FluxoCaixa::where($today, '=', 'dia_ref')->load()) {
+                    $caixa = new FluxoCaixa();
+                    $caixa->save();
+                    $saldo_anterior = new FluxoCaixa($caixa->id - 1);
+                    $caixa->saldo = floatval($saldo_anterior->saldo) + floatval($object->get_valor_pag());
+                    $caixa->save();
+                }else{
+                    $caixa->saldo = floatval($caixa->saldo) + floatval($object->get_valor_pag());
+                }
+            }else{
                 
-    //         }
-    //         TTransaction::close();
-    //         $this->caixa_id = $caixa->id;
-    //     } catch (Exepetion $e) {
-    //         new TMessage('error', 'Ocorreu um erro: ' . $e->getMessage() . ' caontacte o administrador');
-    //     }
-    // }
+            }
+            TTransaction::close();
+            $this->caixa_id = $caixa->id;
+        } catch (Exepetion $e) {
+            new TMessage('error', 'Ocorreu um erro: ' . $e->getMessage() . ' caontacte o administrador');
+        }
+    }
 }
-=======
-}
->>>>>>> 326a4995e6914b3b26e6c506f0df36db3555c13e
