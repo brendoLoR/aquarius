@@ -588,6 +588,7 @@ class NewVenda extends TWindow
             $venda->id_tipo_entrega = $data->id_tipo_entrega;
             $venda->valor_pago = floatval(str_replace(',', '.', str_replace('.', '', $data->valor_pag)));
             $venda->frete_preco = floatval(str_replace(',', '.', str_replace('.', '', $data->frete_preco)));
+            $venda->$this->updateDayCaixa($venda);
             $venda->store();
             $venda->n_venda = $date_now->format('Ym') . $venda->id;
 
@@ -729,6 +730,30 @@ class NewVenda extends TWindow
             new TMessage('info', 'Venda Quitada', $posAction);
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
+        }
+    }
+    public function updateDayCaixa($param)
+    {
+        try {
+            TTransaction::open('database');
+            $today = new DateTime();
+
+            if (!isset($object->id)) {
+                if (!$caixa = FluxoCaixa::where('dia_ref', 'like', $today->format("Y-m-d"))->load()) {
+                    $caixa = new FluxoCaixa();
+                    $caixa->save();
+                    $saldo_anterior = new FluxoCaixa($caixa->id - 1);
+                    $caixa->saldo = floatval($saldo_anterior->saldo) + floatval($object->get_valor_pag());
+                    $caixa->save();
+                } else {
+                    $caixa->saldo = floatval($caixa->saldo) + floatval($object->get_valor_pag());
+                }
+            } else {
+            }
+            // TTransaction::close();
+            $this->caixa_id = $caixa->id;
+        } catch (Exception $e) {
+            new TMessage('error', 'Ocorreu um erro: ' . $e->getMessage() . ' caontacte o administrador');
         }
     }
 }
