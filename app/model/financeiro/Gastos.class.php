@@ -29,15 +29,8 @@ class Gastos extends TRecord
         parent::addAttribute('data_hora');
         parent::addAttribute('detalhe');
         parent::addAttribute('funcionario_id');
-        parent::addAttribute('caixa_id');
     }
-    public function get_caixa()
-    {
-        if (empty($this->caixa)) {
-            $this->caixa = new FluxoCaixa($this->caixa_id);
-        }
-        return $this->caixa;
-    }
+
     public function get_descricao_gasto()
     {
         if (empty($this->descricao_gasto)) {

@@ -90,24 +90,17 @@ class Vendas extends TRecord
     // public function onAfterStore($object)
     // {
     //     try {
-    //         // TTransaction::open('database');
-    //         $today = new DateTime();
+            
+    //         if (isset($object->id)) {
+    //             $venda = new Vendas($object->id);
 
-    //         if (!isset($object->id)) {
-    //             if (!$caixa = FluxoCaixa::where('dia_ref', 'like', $today->format("Y-m-d"))->load()) {
-    //                 $caixa = new FluxoCaixa();
-    //                 $caixa->save();
-    //                 $saldo_anterior = new FluxoCaixa($caixa->id - 1);
-    //                 $caixa->saldo = floatval($saldo_anterior->saldo) + floatval($object->get_valor_pag());
-    //                 $caixa->save();
-    //             }else{
-    //                 $caixa->saldo = floatval($caixa->saldo) + floatval($object->get_valor_pag());
-    //             }
-    //         }else{
-                
-    //         }
-    //         // TTransaction::close();
-    //         $this->caixa_id = $caixa->id;
+    //             $caixa = new Movimentacao();
+    //             $caixa->mov_id = $this->id;
+    //             $caixa->valor = $venda->get_valor_pag();
+    //             $caixa->tipo_mov_id = 1;
+    //             $caixa->store();
+    //         } 
+            
     //     } catch (Exception $e) {
     //         new TMessage('error', 'Ocorreu um erro: ' . $e->getMessage() . ' caontacte o administrador');
     //     }
