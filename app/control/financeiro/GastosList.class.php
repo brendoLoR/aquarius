@@ -42,7 +42,7 @@ class GastosList extends TStandardList
         parent::__construct();
 
         parent::setDatabase('database');            // defines the database
-        parent::setActiveRecord('gastos');   // defines the active record
+        parent::setActiveRecord('Gastos');   // defines the active record
         parent::setDefaultOrder('id', 'desc');         // defines the default order
         parent::addFilterField('id', '=', 'id'); // filterField, operator, formField
         parent::addFilterField('(SELECT id FROM tipos_gasto WHERE id =(select tipos_gasto_id from descricao_gastos where id = descricao_gasto_id))', '=', 'tipo_gasto'); // filterField, operator, formField
