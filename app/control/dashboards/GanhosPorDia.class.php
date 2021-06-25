@@ -68,7 +68,7 @@ class GanhosPorDia extends TPage
         $ano_referencia->setSize("30%");
         $mes_referencia->addValidation('mes', new TRequiredValidator);
         $ano_referencia->addValidation('ano', new TRequiredValidator);
-        
+
         $this->form->addFields(
             [new TLabel('Ano referência:')],
             [$ano_referencia],
@@ -85,7 +85,7 @@ class GanhosPorDia extends TPage
                 'ano' => $param['ano']
             ]);
             $this->console_log('params');
-            $mes = new DateTime($param['ano'].$param['mes']);
+            $mes = new DateTime($param['ano'] . $param['mes']);
             $mes = $mes->format('F');
         } else {
             $date = new DateTime();
@@ -103,7 +103,7 @@ class GanhosPorDia extends TPage
             'data' => json_encode($data),
             'width' => '1100px',
             'height' => '400px',
-            'title' => 'Ganhos por dia - '._t($mes),
+            'title' => 'Ganhos por dia - ' . _t($mes),
             'ytitle' => 'R$',
             'xtitle' => 'Dia',
             'uniqud' => uniqid()
@@ -131,28 +131,27 @@ class GanhosPorDia extends TPage
     {
         try {
             $this->form->validate();
-        $data = $this->getData($param);
-        $this->html->enableSection('main', array(
-            // aqui eu tenho que passsar os elementos do meu array
-            'data' => json_encode($data),
-            'width' => '1100px',
-            'height' => '400px',
-            'title' => 'Ganhos por dia',
-            'ytitle' => 'R$',
-            'xtitle' => 'Dia',
-            'uniqud' => uniqid()
-        ));
+            $data = $this->getData($param);
+            $this->html->enableSection('main', array(
+                // aqui eu tenho que passsar os elementos do meu array
+                'data' => json_encode($data),
+                'width' => '1100px',
+                'height' => '400px',
+                'title' => 'Ganhos por dia',
+                'ytitle' => 'R$',
+                'xtitle' => 'Dia',
+                'uniqud' => uniqid()
+            ));
         } catch (Exception $th) {
             new TMessage('error', $th->getMessage());
         }
-        
     }
     public function getData($param)
     {
         try {
             TTransaction::open('database');
 
-            $data[] = ['Dia', 'Recebido', 'Vendido'];
+            $data[] = ['Dia', 'Recebido', 'Vendido', 'Gasto'];
 
             for ($i = 01; $i < 31; $i++) {
                 $date1 = new DateTime($param['ano'] . '-' . $param['mes'] . '-' . $i);
@@ -160,12 +159,17 @@ class GanhosPorDia extends TPage
                 $venda_dia = Vendas::between('data_venda', $date1->format('Y-m-d H:i:s'), $date2->format('Y-m-d H:i:s'))->load();
                 $venda_valor = 0;
                 $venda_pago = 0;
+                $gasto_dia = Gastos::between('data_hora', $date1->format('Y-m-d H:i:s'), $date2->format('Y-m-d H:i:s'))->load();
+                $gasto = 0;
                 $this->console_log(array($date1, $date2));
                 foreach ($venda_dia as $key) {
-                    $venda_pago += floatval($key->get_valor_pag());
+                    $venda_pago += floatval($key->valor_pago);
                     $venda_valor += floatval($key->get_valor_total()) + floatval($key->frete_preco);
                 };
-                $data[] = [$date2->format('d'), $venda_pago, $venda_valor];
+                foreach ($gasto_dia as $key) {
+                    $gasto += floatval($key->valor_gasto);
+                }
+                $data[] = [$date2->format('d'), $venda_pago, $venda_valor, $gasto];
             }
 
 

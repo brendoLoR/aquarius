@@ -591,7 +591,7 @@ class NewVenda extends TWindow
             $venda->store();
             $venda->n_venda = $date_now->format('Ym') . $venda->id;
 
-
+            Movimentacao::new_entry(['id' => $venda->id]);
 
             // VendaProduto::where('id_venda', '=', $venda->id)->delete();
 
@@ -625,6 +625,7 @@ class NewVenda extends TWindow
             $posAction = new TAction(array('VendaList', 'onReload'));
             $posAction->setParameters($param);
             TTransaction::close(); // close the transaction
+
             new TMessage('info', TAdiantiCoreTranslator::translate('Record saved'), $posAction);
         } catch (Exception $e) // in case of exception
         {
@@ -721,14 +722,19 @@ class NewVenda extends TWindow
         try {
             TTransaction::open('database');
             $venda = new Vendas($param['id']);
+            $valor_restante = floatval($venda->get_valor_total()) + floatval($venda->frete_preco) - $venda->valor_pago;
             $venda->valor_pago = floatval($venda->get_valor_total()) + floatval($venda->frete_preco);
+            Movimentacao::new_entry([
+                'id' => $venda->id,
+                'valor' => $valor_restante
+            ]);
             $venda->store();
             TTransaction::close();
             $posAction = new TAction(array($this, 'onEdit'));
             $posAction->setParameters($param);
             new TMessage('info', 'Venda Quitada', $posAction);
         } catch (Exception $e) {
-            new TMessage('error', $e->getMessage());
+            new TMessage('error', 'Ocorreu um erro: ' . $e->getMessage() . ' caontacte o administrador');
         }
     }
 }
