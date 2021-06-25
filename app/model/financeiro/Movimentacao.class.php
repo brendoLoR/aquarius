@@ -39,4 +39,13 @@ class Movimentacao extends TRecord
         $mov->valor = isset($param['valor']) ? $mov->valor = $param['valor'] : $mov->valor = $venda->valor_pago;
         $mov->store();
     }
+    static function new_out($param)
+    {
+        $mov = new Movimentacao();
+        $gasto = new Gastos($param['id']);
+        $mov->mov_id = $gasto->id;
+        $mov->tipo_mov_id = 2;
+        $mov->valor = isset($param['valor']) ? $mov->valor = $param['valor'] : $mov->valor = $gasto->valor_gasto;
+        $mov->store();
+    }
 }

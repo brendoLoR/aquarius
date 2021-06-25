@@ -16,7 +16,6 @@ class Gastos extends TRecord
     const IDPOLICY =  'serial'; // {max, serial}
     private $descricao_gasto;
     private $funcionario;
-    private $caixa;
 
     /**
      * Constructor method
@@ -34,7 +33,7 @@ class Gastos extends TRecord
     public function get_descricao_gasto()
     {
         if (empty($this->descricao_gasto)) {
-            $this->descricao_gasto = new TipoGasto($this->descricao_gasto_id);
+            $this->descricao_gasto = new DescricaoGastos($this->descricao_gasto_id);
         }
         return $this->descricao_gasto;
     }
