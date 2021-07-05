@@ -59,7 +59,7 @@ class PDFCreate extends TPage
                 $invoice->pay_method = $nao_informado;
             }
 
-            if (is_null($tipo_entrega = $venda->get_tipo_entrega()->tipo_entrega)) {
+            if (!is_null($tipo_entrega = $venda->get_tipo_entrega()->tipo_entrega)) {
                 $invoice->tipo_entrega = $tipo_entrega;
             } else {
                 $invoice->tipo_entrega = $nao_informado;
