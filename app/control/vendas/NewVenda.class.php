@@ -113,6 +113,7 @@ class NewVenda extends TWindow
         // add validations
         $date->addValidation('Date', new TRequiredValidator);
         $cliente_id->addValidation('Customer', new TRequiredValidator);
+        $tipo_entrega->addValidation('tipo_entrega', new TRequiredValidator);
 
         // change action
         $produto_detalhe_produto_id->setChangeAction(new TAction([$this, 'onProdutoChange']));
