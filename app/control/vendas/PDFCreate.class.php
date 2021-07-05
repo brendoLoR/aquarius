@@ -30,6 +30,8 @@ class PDFCreate extends TPage
                 $venda_id = $this->venda_id;
             }
 
+            $nao_informado = "não informado";
+
             $venda = new Vendas($venda_id);
             $produtos = VendaProduto::where('id_venda', '=', $venda->id)->load();
             $cliente = $venda->get_cliente();
@@ -46,34 +48,42 @@ class PDFCreate extends TPage
             $date = new DateTime();
 
             $invoice->id   = $venda->id;
-            
+
             $invoice->date =  $date->format('d/m/Y');
             $invoice->order_date = $venda->data_venda;
             $invoice->entrega_date = $venda->data_entrega_previsto;
-            $invoice->pay_method = $venda->get_pagamento()->metodo;
-            $invoice->tipo_entrega = $venda->get_tipo_entrega()->tipo_entrega;
             $invoice->valor_pedido = $venda->get_valor_total();
-            
-            if($venda->valor_pago <= 0){
+            if (!is_null($metodo = $venda->get_pagamento()->metodo)) {
+                $invoice->pay_method = $metodo;
+            } else {
+                $invoice->pay_method = $nao_informado;
+            }
+
+            if (is_null($tipo_entrega = $venda->get_tipo_entrega()->tipo_entrega)) {
+                $invoice->tipo_entrega = $tipo_entrega;
+            } else {
+                $invoice->tipo_entrega = $nao_informado;
+            }
+
+            if ($venda->valor_pago <= 0) {
                 $invoice->valor_pago = 0.0001;
-            }else{
+            } else {
                 $invoice->valor_pago = $venda->valor_pago;
             }
-            if($venda->frete_preco <= 0){
+
+            if ($venda->frete_preco <= 0) {
                 $invoice->shipping = 0.0001;
-            }else{
+            } else {
                 $invoice->shipping = $venda->frete_preco;
             }
-            
+
             $valor_total = floatval($invoice->valor_pedido) + floatval($venda->frete_preco);
-            
-            if($valor_total <= 0){
+
+            if ($valor_total <= 0) {
                 $invoice->valor_total = 0.0001;
-            }else{
+            } else {
                 $invoice->valor_total = $valor_total;
             }
-
-
 
             if ($venda->valor_pago - $invoice->valor_total + $venda->frete_preco < 0) {
                 $invoice->resta_sinal = "-";
@@ -82,9 +92,9 @@ class PDFCreate extends TPage
             }
 
             $resta = floatval($venda->valor_pago) - floatval($invoice->valor_total);
-            if($resta <= 0){
+            if ($resta <= 0) {
                 $invoice->resta = 0.0001;
-            }else{
+            } else {
                 $invoice->resta = abs($resta);
             }
 
@@ -105,7 +115,11 @@ class PDFCreate extends TPage
             }
 
             $customer->telefone   = $cliente->telefone;
-            $customer->email = $cliente->email;
+            if (isset($cliente->email)) {
+                $customer->email = $cliente->email;
+            } else {
+                $customer->email = $nao_informado;
+            }
 
             if (isset($cliente->cpf_cnpj)) {
                 $customer->cpf_cnpj = $cliente->cpf_cnpj;
@@ -115,10 +129,6 @@ class PDFCreate extends TPage
                 $customer->cpf_cnpj = '999.999.999-99';
             }
 
-            $customer->email       = $cliente->email;
-            
-            $shipping->name       = $cliente->nome_cliente;
-           
             $vendedor->name = $vendedor_inf->name;
             $vendedor->email = $vendedor_inf->email;
 
@@ -159,7 +169,7 @@ class PDFCreate extends TPage
             ]), 'fa:save');
             $panel->add($this->html);
 
-            $vbox->add($panel);         
+            $vbox->add($panel);
             parent::add($vbox);
             TTransaction::close();
         } catch (Exception $e) {
@@ -186,8 +196,8 @@ class PDFCreate extends TPage
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
 
-            $file = 'app/output/aquarius-'.date_format(new DateTime($param['date']),'Ym').$param['id'].'.pdf';
-            
+            $file = 'app/output/aquarius-' . date_format(new DateTime($param['date']), 'Ym') . $param['id'] . '.pdf';
+
             // write and open file
             file_put_contents($file, $dompdf->output($options = ['compress' => 0]));
             parent::openFile($file);
