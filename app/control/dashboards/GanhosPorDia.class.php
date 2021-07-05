@@ -167,7 +167,7 @@ class GanhosPorDia extends TPage
                     $venda_valor += floatval($key->get_valor_total()) + floatval($key->frete_preco);
                 };
                 foreach ($gasto_dia as $key) {
-                    $gasto += floatval($key->valor_gasto);
+                    $gasto += floatval($key->valor_gasto)*(-1); 
                 }
                 $data[] = [$date2->format('d'), $venda_pago, $venda_valor, $gasto];
             }
