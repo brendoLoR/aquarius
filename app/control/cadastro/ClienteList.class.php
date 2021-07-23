@@ -36,7 +36,7 @@
             $this->setLimit(-1); // turn off limit for datagrid
 
             // create the form
-            $this->form = new BootstrapFormBuilder('form_categories');
+            $this->form = new BootstrapFormBuilder('form_cliente');
             $this->form->setFormTitle('Listagem de clientes');
 
             $radio_enable = new TRadioGroup('enable');
@@ -66,8 +66,8 @@
             $this->form->addFields([new TLabel('Telefone', 'red')],  [$telefone]);
             $this->form->addFields([new TLabel('Endereço')],  [$endereco]);
 
-            TEntry::enableField('form_categories', 'cpf');
-            TEntry::disableField('form_categories', 'cnpj');
+            TEntry::enableField('form_cliente', 'cpf');
+            TEntry::disableField('form_cliente', 'cnpj');
 
             $cliente->addValidation('nome_cliente', new TRequiredValidator);
             $telefone->addValidation('telefone', new TRequiredValidator);
@@ -123,13 +123,13 @@
         public static function onChangeRadio($value)
         {
             if ($value['enable'] == 1) {
-                TEntry::enableField('form_categories', 'cpf');
-                TEntry::disableField('form_categories', 'cnpj');
-                TEntry::clearField('form_categories', 'cnpj');
+                TEntry::enableField('form_cliente', 'cpf');
+                TEntry::disableField('form_cliente', 'cnpj');
+                TEntry::clearField('form_cliente', 'cnpj');
             } else {
-                TEntry::enableField('form_categories', 'cnpj');
-                TEntry::disableField('form_categories', 'cpf');
-                TEntry::clearField('form_categories', 'cpf');
+                TEntry::enableField('form_cliente', 'cnpj');
+                TEntry::disableField('form_cliente', 'cpf');
+                TEntry::clearField('form_cliente', 'cpf');
             }
         }
         // public function onSave()
