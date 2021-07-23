@@ -14,6 +14,7 @@ use Adianti\Database\TTransaction;
  */
 class PDFCreate extends TPage
 {
+    public $html;
     public $venda_id;
     /**
      * Constructor method
@@ -91,11 +92,11 @@ class PDFCreate extends TPage
                 $invoice->resta_sinal = " ";
             }
 
-            $resta = floatval($venda->valor_pago) - floatval($invoice->valor_total);
+            $resta = floatval($invoice->valor_total) - floatval($venda->valor_pago);
             if ($resta <= 0) {
                 $invoice->resta = 0.0001;
             } else {
-                $invoice->resta = abs($resta);
+                $invoice->resta = $resta;
             }
 
             if (isset($venda->observacao)) {
@@ -183,6 +184,7 @@ class PDFCreate extends TPage
             // string with HTML contents
             $html = clone $this->html;
             $contents = file_get_contents('app/resources/styles-print.html') . $html->getContents();
+            $photo = file_get_contents('app/images/system/logo.png') . $html->getContents();
 
             $options = new \Dompdf\Options($attributes = [
                 'pdfBackend' => 'CPDF'
@@ -192,6 +194,7 @@ class PDFCreate extends TPage
 
             // converts the HTML template into PDF
             $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($photo);
             $dompdf->loadHtml($contents);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
