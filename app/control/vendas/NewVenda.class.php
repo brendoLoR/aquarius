@@ -35,7 +35,7 @@ class NewVenda extends TWindow
         parent::setSize(0.8, null);
         parent::removePadding();
         parent::removeTitleBar();
-        parent::disableEscape();
+        // parent::disableEscape();
 
         // creates the form
         $this->form = new BootstrapFormBuilder('form_venda');
@@ -50,14 +50,14 @@ class NewVenda extends TWindow
         $cliente_id  = new TDBUniqueSearch('id_cliente', 'database', 'Cliente', 'id', 'nome_cliente');
         $valor_pago  = new TEntry('valor_pag');
         $obs         = new TText('observacao');
-        $frete_preco = new TEntry('frete_preco');
+        $frete_preco = new TNumeric('frete_preco', 2, ',', '.');
         $forma_pagamento  = new TDBCombo('id_pagamento', 'database', 'FormaPagamento', 'id', 'metodo');
         $tipo_entrega    = new TRadioGroup('id_tipo_entrega');
         $tipo_entrega  = new TDBCombo('id_tipo_entrega', 'database', 'TipoEntrega', 'id', 'tipo_entrega');
 
 
 
-        $button = new TActionLink('', new TAction(['ClienteList', 'onEdit']), 'green', null, null, 'fa:plus-circle');
+        $button = new TActionLink('', new TAction(['ClienteTWindownForm', 'onEdit']), 'green', null, null, 'fa:plus-circle');
         $button->class = 'btn btn-default inline-button';
         $button->title = _t('New');
         $cliente_id->after($button);
@@ -87,7 +87,7 @@ class NewVenda extends TWindow
         $produto_detalhe_preco->setEditable(false);
         $produto_detalhe_quantidade->setNumericMask(0, ',', '');
         $valor_pago->setNumericMask(2, ',', '.');
-        $frete_preco->setNumericMask(2, ',', '.');
+        // $frete_preco->setNumericMask(2, ',', '.');
 
         $id->setEditable(false);
         $produto_detalhe_id->setEditable(false);
@@ -589,7 +589,8 @@ class NewVenda extends TWindow
             $venda->id_pagamento = $data->id_pagamento;
             $venda->id_tipo_entrega = $data->id_tipo_entrega;
             $venda->valor_pago = floatval(str_replace(',', '.', str_replace('.', '', $data->valor_pag)));
-            $venda->frete_preco = floatval(str_replace(',', '.', str_replace('.', '', $data->frete_preco)));
+            // $venda->frete_preco = floatval(str_replace(',', '.', str_replace('.', '', $data->frete_preco)));
+            $venda->frete_preco = $data->frete_preco;
             $venda->store();
             $venda->n_venda = $date_now->format('Ym') . $venda->id;
 
@@ -732,7 +733,7 @@ class NewVenda extends TWindow
             ]);
             $venda->store();
             TTransaction::close();
-            $posAction = new TAction(array($this, 'onEdit'));
+            $posAction = new TAction(array('VendaList', 'onReload'));
             $posAction->setParameters($param);
             new TMessage('info', 'Venda Quitada', $posAction);
         } catch (Exception $e) {
