@@ -28,6 +28,10 @@
         <action>ClienteList</action>
         <icon>fas:address-card fa-fw #6ba7a3</icon>
       </menuitem>
+      <menuitem label="Novo Cliente">
+        <action>ClienteTWindowForm</action>
+        <icon>fab fa:wpforms fa-fw #6ba7a3</icon>
+      </menuitem>
     </menu>
   </menuitem>
   <menuitem label="Produção">
