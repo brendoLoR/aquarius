@@ -141,7 +141,7 @@ class GanhosPorDia extends TPage
             $this->html->enableSection('main', array(
                 // aqui eu tenho que passsar os elementos do meu array
                 'data' => json_encode($data),
-                'width' => '70%',
+                'width' => '1000px',
                 'height' => '400px',
                 'uniqid' => uniqid(),
                 'title' => 'Ganhos por dia',
