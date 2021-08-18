@@ -32,7 +32,7 @@ class GanhosPorDia extends TPage
 
         parent::__construct($show_breadcrumb = true);
         $this->form = new BootstrapFormBuilder('ref_date');
-
+        $produtos_graf = new ProdutosMaisVendidos();
         $ano_referencia = new TCombo("ano");
         $ano_referencia->addItems([
             '2015' => '2015',
@@ -101,8 +101,9 @@ class GanhosPorDia extends TPage
         $this->html->enableSection('main', array(
             // aqui eu tenho que passsar os elementos do meu array
             'data' => json_encode($data),
-            'width' => '1100px',
+            'width' => '1000px',
             'height' => '400px',
+            'uniqid' => uniqid(),
             'title' => 'Ganhos por dia - ' . _t($mes),
             'ytitle' => 'R$',
             'xtitle' => 'Dia',
@@ -110,12 +111,17 @@ class GanhosPorDia extends TPage
         ));
         $panel = new TPanelGroup('Dashboard');
 
-        $table = new TTable;
+        $table = new TTable();
         $table->border = 0;
         $table->style = 'border-collapse:collapse';
         $table->width = '100%';
-        $table->addRowSet($this->form);
-        $table->addRowSet($this->html);
+        $row = $table->addRow();
+        $form_table = $row->addCell($this->form);
+        $form_table->colspan = 2;
+        $row = $table->addRow();
+        $row->addCell($produtos_graf);
+        $row->addCell($this->html);
+
         $panel->add($table);
         $panel->getBody()->style = "overflow-x:auto;";
 
@@ -135,8 +141,9 @@ class GanhosPorDia extends TPage
             $this->html->enableSection('main', array(
                 // aqui eu tenho que passsar os elementos do meu array
                 'data' => json_encode($data),
-                'width' => '1100px',
+                'width' => '70%',
                 'height' => '400px',
+                'uniqid' => uniqid(),
                 'title' => 'Ganhos por dia',
                 'ytitle' => 'R$',
                 'xtitle' => 'Dia',
@@ -167,7 +174,7 @@ class GanhosPorDia extends TPage
                     $venda_valor += floatval($key->get_valor_total()) + floatval($key->frete_preco);
                 };
                 foreach ($gasto_dia as $key) {
-                    $gasto += floatval($key->valor_gasto)*(-1); 
+                    $gasto += floatval($key->valor_gasto) * (-1);
                 }
                 $data[] = [$date2->format('d'), $venda_pago, $venda_valor, $gasto];
             }
