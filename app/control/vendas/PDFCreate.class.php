@@ -47,12 +47,13 @@ class PDFCreate extends TPage
             $vendedor = new stdClass;
 
             $date = new DateTime();
+            $date_entrega = new DateTime($venda->data_entrega_previsto);
 
             $invoice->id   = $venda->id;
 
             $invoice->date =  $date->format('d/m/Y');
             $invoice->order_date = $venda->data_venda;
-            $invoice->entrega_date = $venda->data_entrega_previsto;
+            $invoice->entrega_date = $date_entrega->format('d/m/Y');
             $invoice->valor_pedido = $venda->get_valor_total();
             if (!is_null($metodo = $venda->get_pagamento()->metodo)) {
                 $invoice->pay_method = $metodo;
@@ -198,8 +199,12 @@ class PDFCreate extends TPage
             $dompdf->loadHtml($contents);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
+            
+            //clear all files in foder
+            $this->clearTmp("app/output/*.pdf");
 
-            $file = 'app/output/aquarius-' . date_format(new DateTime($param['date']), 'Ym') . $param['id'] . '.pdf';
+            $file = 'app/output/aquarius-' . uniqid() . '.pdf';
+
 
             // write and open file
             file_put_contents($file, $dompdf->output($options = ['compress' => 0]));
@@ -215,6 +220,11 @@ class PDFCreate extends TPage
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
+    }
+    private function clearTmp($caminho)
+    {
+        $mascara = $caminho;
+        array_map("unlink", glob($mascara));
     }
     public function onEdit($param)
     {
